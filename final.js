@@ -33,7 +33,6 @@ axios.get(url).then(response => {
 
                 response.data.results.forEach(element => {
                     element.measurements.forEach(element => {
-                        console.log(element.parameter)
                         if (element.parameter == 'co') { data.CO = element.value }
                         if (element.parameter == 'so2') { data.SO2 = element.value }
                         if (element.parameter == 'o3') { data.O3 = element.value }
