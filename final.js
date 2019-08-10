@@ -30,25 +30,29 @@ axios.get(url).then(response => {
                     PM25: "",
                     PM10: ""
                 }
-
-                response.data.results.forEach(element => {
-                    element.measurements.forEach(element => {
-                        if (element.parameter == 'co') { data.CO = element.value }
-                        if (element.parameter == 'so2') { data.SO2 = element.value }
-                        if (element.parameter == 'o3') { data.O3 = element.value }
-                        if (element.parameter == 'no2') { data.NO2 = element.value }
-                        if (element.parameter == 'pm25') { data.PM25 = element.value }
-                        if (element.parameter == 'pm10') { data.PM10 = element.value }
-
-                    });
-                    data.Location = element.location;
-
-
-
-                    var jsonData = JSON.stringify(data)
-                    writeStream.write(jsonData + ',\n');
-                });
-
+                  for (let index = 0; index < response.data.results.length;) {
+                    const element = response.data.results[index];
+                    if(element.measurements[0].lastUpdated.includes('2017') ||element.measurements[0].lastUpdated.includes('2018') || element.measurements[0].lastUpdated.includes('2016')  )
+                    {index++;}
+                    else {
+                        element.measurements.forEach(element => {
+                        
+                            if (element.parameter == 'co') { data.CO = element.value }
+                            if (element.parameter == 'so2') { data.SO2 = element.value }
+                            if (element.parameter == 'o3') { data.O3 = element.value }
+                            if (element.parameter == 'no2') { data.NO2 = element.value }
+                            if (element.parameter == 'pm25') { data.PM25 = element.value }
+                            if (element.parameter == 'pm10') { data.PM10 = element.value }
+    
+                        });
+                        data.Location = element.location;
+                     
+                        var jsonData = JSON.stringify(data)
+                        writeStream.write(jsonData + ',\n');
+                            index++;
+                    }
+                    
+                 }        
 
             })
             .catch(function (error) {
